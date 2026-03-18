@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ action }} Expense - Expense Tracker{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 600px; margin: 0 auto;">
+    <h2>{{ action }} Expense Request #{{ expense.id }}</h2>
+    <p style="margin: 1rem 0;">Confirm your action for the expense submitted by <strong>{{ expense.employee.username }}</strong> for <strong>${{ expense.amount }}</strong>.</p>
+    
+    <div style="background: #f8fafc; padding: 1rem; border-radius: 0.5rem; margin-bottom: 2rem;">
+        <p><strong>Category:</strong> {{ expense.category.name }}</p>
+        <p><strong>Description:</strong> {{ expense.description }}</p>
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+        <div style="margin-bottom: 1.5rem;">
+            <label for="remarks" style="display: block; font-weight: 600; margin-bottom: 0.5rem;">Remarks (Optional)</label>
+            <textarea name="remarks" id="remarks" rows="4" style="width: 100%; border: 1px solid var(--border-color); border-radius: 0.5rem; padding: 0.75rem;"></textarea>
+        </div>
+        
+        <div style="display: flex; gap: 1rem;">
+            <button type="submit" class="btn" style="background: {% if action == 'Approve' %}var(--success){% else %}var(--danger){% endif %}; color: white; flex: 1;">
+                Confirm {{ action }}
+            </button>
+            <a href="{% url 'approval_list' %}" class="btn" style="background: var(--secondary-color); color: white; flex: 1; text-align: center;">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

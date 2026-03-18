@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}{{ action }} User - Expense Tracker{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 600px; margin: 0 auto;">
+    <h2>{{ action }} User</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <div style="margin-top: 2rem; display: flex; gap: 1rem; justify-content: space-between;">
+            <div style="display: flex; gap: 1rem;">
+                <button type="submit" class="btn btn-primary">{{ action }} User</button>
+                <a href="{% url 'user_list' %}" class="btn" style="background: var(--secondary-color); color: white;">Cancel</a>
+            </div>
+            {% if action == 'Edit' and user_obj.username != 'admin' %}
+            <a href="{% url 'user_delete' user_obj.id %}" class="btn" style="background: var(--danger); color: white;">Delete User</a>
+            {% endif %}
+        </div>
+    </form>
+</div>
+{% endblock %}

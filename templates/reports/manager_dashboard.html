@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}Manager Dashboard - Expense Tracker{% endblock %}
+
+{% block content %}
+<div class="stat-grid">
+    <div class="stat-card">
+        <h3>Department Budget</h3>
+        <p class="h2">₹{{ dept_budget }}</p>
+    </div>
+    <div class="stat-card">
+        <h3>Used Budget</h3>
+        <p class="h2">₹{{ used_budget }}</p>
+    </div>
+    <div class="stat-card">
+        <h3>Remaining</h3>
+        <p class="h2">₹{{ remaining_budget }}</p>
+    </div>
+    <div class="stat-card">
+        <h3>Pending My Approval</h3>
+        <p class="h2">{{ pending_count }}</p>
+    </div>
+</div>
+
+<div class="card">
+    <h3>Approval Queue</h3>
+    <table style="width: 100%; border-collapse: collapse; margin-top: 1rem;">
+        <thead>
+            <tr style="border-bottom: 2px solid var(--border-color); text-align: left;">
+                <th style="padding: 0.75rem;">Employee</th>
+                <th style="padding: 0.75rem;">Amount</th>
+                <th style="padding: 0.75rem;">Date</th>
+                <th style="padding: 0.75rem;">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for expense in recent_expenses %}
+            <tr style="border-bottom: 1px solid var(--border-color);">
+                <td style="padding: 0.75rem;">{{ expense.employee.username }}</td>
+                <td style="padding: 0.75rem;">₹{{ expense.amount }}</td>
+                <td style="padding: 0.75rem;">{{ expense.submitted_at|date:"Y-m-d" }}</td>
+                <td style="padding: 0.75rem;">
+                    {% if expense.status == 'PENDING' %}
+                    <a href="{% url 'approve_expense' expense.id %}">Review</a>
+                    {% else %}
+                    <span class="status-badge {% if expense.status == 'APPROVED' %}status-approved{% else %}status-rejected{% endif %}">{{ expense.get_status_display }}</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="4" style="padding: 1rem; text-align: center;">No approvals in queue.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

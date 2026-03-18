@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Submit Expense - Expense Tracker{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 600px; margin: 0 auto;">
+    <h2>Submit New Expense</h2>
+    <p style="color: var(--text-muted); margin-bottom: 2rem;">Please fill in the details and upload your bill/invoice.</p>
+    
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <div style="margin-top: 2rem; display: flex; gap: 1rem;">
+            <button type="submit" class="btn btn-primary">Submit Request</button>
+            <a href="{% url 'expense_list' %}" class="btn" style="background: var(--secondary-color); color: white;">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

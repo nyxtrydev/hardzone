@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}Pending Approvals - Expense Tracker{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>Pending Approvals</h2>
+    <p style="color: var(--text-muted); margin-bottom: 2rem;">Review and approve/reject expense requests from your team.</p>
+
+    <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+            <tr style="border-bottom: 2px solid var(--border-color); text-align: left;">
+                <th style="padding: 0.75rem;">Employee</th>
+                <th style="padding: 0.75rem;">Category</th>
+                <th style="padding: 0.75rem;">Amount</th>
+                <th style="padding: 0.75rem;">Date</th>
+                <th style="padding: 0.75rem;">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for expense in pending_expenses %}
+            <tr style="border-bottom: 1px solid var(--border-color);">
+                <td style="padding: 0.75rem;">{{ expense.employee.username }}</td>
+                <td style="padding: 0.75rem;">{{ expense.category.name }}</td>
+                <td style="padding: 0.75rem; font-weight: 600;">${{ expense.amount }}</td>
+                <td style="padding: 0.75rem;">{{ expense.submitted_at|date:"Y-m-d" }}</td>
+                <td style="padding: 0.75rem;">
+                    <span class="status-badge {% if expense.status == 'PENDING' %}status-pending{% elif expense.status == 'APPROVED' %}status-approved{% else %}status-rejected{% endif %}">
+                        {{ expense.get_status_display }}
+                    </span>
+                </td>
+                <td style="padding: 0.75rem;">
+                    <a href="{% url 'approve_expense' expense.id %}" class="btn" style="background: var(--success); color: white; padding: 0.25rem 0.75rem; margin-right: 0.5rem;">Approve</a>
+                    <a href="{% url 'reject_expense' expense.id %}" class="btn" style="background: var(--danger); color: white; padding: 0.25rem 0.75rem;">Reject</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" style="padding: 2rem; text-align: center; color: var(--text-muted);">No pending approvals.</td> {# Updated colspan #}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

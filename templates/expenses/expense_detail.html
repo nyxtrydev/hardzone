@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block title %}Expense #{{ expense.id }} - Expense Tracker{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 800px; margin: 0 auto;">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2rem;">
+        <div>
+            <h2>Expense Details #{{ expense.id }}</h2>
+            <p style="color: var(--text-muted);">Submitted on {{ expense.submitted_at|date:"F j, Y, g:i a" }}</p>
+        </div>
+        <div class="badge {% if expense.status == 'APPROVED' %}badge-success{% elif expense.status == 'REJECTED' %}badge-danger{% else %}badge-warning{% endif %}" style="padding: 0.5rem 1rem; border-radius: 2rem; color: white;">
+            {{ expense.get_status_display }}
+        </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+        <div>
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display: block; font-weight: 600; color: var(--secondary-color);">Category</label>
+                <p>{{ expense.category.name }}</p>
+            </div>
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display: block; font-weight: 600; color: var(--secondary-color);">Amount</label>
+                <p style="font-size: 1.5rem; font-weight: 700;">₹{{ expense.amount }}</p>
+            </div>
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display: block; font-weight: 600; color: var(--secondary-color);">Description</label>
+                <p>{{ expense.description }}</p>
+            </div>
+        </div>
+        <div>
+            <label style="display: block; font-weight: 600; color: var(--secondary-color); margin-bottom: 0.5rem;">Attached Bill</label>
+            {% if expense.bill %}
+                <div style="border: 1px solid var(--border-color); border-radius: 0.5rem; padding: 1rem; text-align: center;">
+                    <i class="fas fa-file-invoice" style="font-size: 3rem; color: var(--secondary-color); margin-bottom: 1rem;"></i>
+                    <p>{{ expense.bill.name }}</p>
+                    <a href="{{ expense.bill.url }}" target="_blank" class="btn btn-primary" style="display: inline-block; margin-top: 1rem;">View / Download</a>
+                </div>
+            {% else %}
+                <p>No bill attached.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <hr style="margin: 2rem 0; border: none; border-top: 1px solid var(--border-color);">
+    
+    <h3>Approval History</h3>
+    {% for approval in expense.approvals.all %}
+    <div style="margin-top: 1rem; padding: 1rem; background: #f1f5f9; border-radius: 0.5rem;">
+        <div style="display: flex; justify-content: space-between;">
+            <strong>{{ approval.approver.username }}</strong>
+            <span style="color: var(--text-muted);">{{ approval.timestamp|date:"Y-m-d" }}</span>
+        </div>
+        <p>Status: <strong>{{ approval.get_status_display }}</strong></p>
+        {% if approval.remarks %}
+        <p style="margin-top: 0.5rem; font-style: italic;">"{{ approval.remarks }}"</p>
+        {% endif %}
+    </div>
+    {% empty %}
+    <p style="color: var(--text-muted); margin-top: 1rem;">Pending review by manager.</p>
+    {% endfor %}
+
+    <div style="margin-top: 2rem;">
+        <a href="{% url 'expense_list' %}" class="btn" style="background: var(--secondary-color); color: white;">Back to List</a>
+    </div>
+</div>
+{% endblock %}

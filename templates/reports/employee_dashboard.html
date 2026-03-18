@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}Employee Dashboard - Expense Tracker{% endblock %}
+
+{% block content %}
+<div class="stat-grid">
+    <div class="stat-card">
+        <h3>My Allocated Budget</h3>
+        <p class="h2">₹{{ my_budget }}</p>
+    </div>
+    <div class="stat-card">
+        <h3>Used Budget</h3>
+        <p class="h2">₹{{ used_budget }}</p>
+    </div>
+    <div class="stat-card">
+        <h3>Remaining</h3>
+        <p class="h2">₹{{ remaining_budget }}</p>
+    </div>
+</div>
+
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <h3>My Recent Expenses</h3>
+        <a href="{% url 'submit_expense' %}" class="btn btn-primary">Submit New Expense</a>
+    </div>
+    <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+            <tr style="border-bottom: 2px solid var(--border-color); text-align: left;">
+                <th style="padding: 0.75rem;">Category</th>
+                <th style="padding: 0.75rem;">Amount</th>
+                <th style="padding: 0.75rem;">Date</th>
+                <th style="padding: 0.75rem;">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for expense in recent_expenses %}
+            <tr style="border-bottom: 1px solid var(--border-color);">
+                <td style="padding: 0.75rem;">{{ expense.category.name }}</td>
+                <td style="padding: 0.75rem;">₹{{ expense.amount }}</td>
+                <td style="padding: 0.75rem;">{{ expense.submitted_at|date:"Y-m-d" }}</td>
+                <td style="padding: 0.75rem;">
+                    <span class="status-badge {% if expense.status == 'PENDING' %}status-pending{% elif expense.status == 'APPROVED' %}status-approved{% else %}status-rejected{% endif %}">
+                        {{ expense.get_status_display }}
+                    </span>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="4" style="padding: 1rem; text-align: center;">No recent expenses.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

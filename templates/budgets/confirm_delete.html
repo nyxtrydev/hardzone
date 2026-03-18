@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}Confirm Delete - Expense Tracker{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 500px; margin: 4rem auto; text-align: center;">
+    <i class="fas fa-exclamation-triangle" style="font-size: 4rem; color: var(--danger); margin-bottom: 2rem;"></i>
+    <h2>Are you sure?</h2>
+    <p style="margin: 1.5rem 0; color: var(--text-muted);">
+        You are about to delete the {{ type }}: <strong>"{{ object }}"</strong>. 
+        This action cannot be undone.
+    </p>
+
+    <form method="post">
+        {% csrf_token %}
+        <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 2rem;">
+            <button type="submit" class="btn btn-danger" style="background: var(--danger); color: white;">Yes, Delete</button>
+            <a href="{% url cancel_url %}" class="btn" style="background: var(--secondary-color); color: white;">No, Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

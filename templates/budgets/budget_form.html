@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}{{ action }} Budget - Expense Tracker{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 600px; margin: 0 auto;">
+    <h2>{{ action }} Budget Allocation</h2>
+    <p style="color: var(--text-muted); margin-bottom: 2rem;">Assign a budget to either a whole department or a specific employee.</p>
+    
+    <form method="post">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <div style="margin-top: 2rem; display: flex; gap: 1rem; justify-content: space-between;">
+            <div style="display: flex; gap: 1rem;">
+                <button type="submit" class="btn btn-primary">{{ action }} Budget</button>
+                <a href="{% url 'budget_list' %}" class="btn" style="background: var(--secondary-color); color: white;">Cancel</a>
+            </div>
+            {% if action == 'Edit' %}
+            <a href="{% url 'budget_delete' allocation.id %}" class="btn" style="background: var(--danger); color: white;">Delete Allocation</a>
+            {% endif %}
+        </div>
+    </form>
+</div>
+{% endblock %}

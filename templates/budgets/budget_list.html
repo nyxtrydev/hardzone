@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}Budgets - Expense Tracker{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <h2>Allocated Budgets</h2>
+        {% if user.role == 'ADMIN' %}
+        <a href="{% url 'budget_create' %}" class="btn btn-primary">Allocate New Budget</a>
+        {% endif %}
+    </div>
+
+    <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+            <tr style="border-bottom: 2px solid var(--border-color); text-align: left;">
+                <th style="padding: 0.75rem;">Target</th>
+                <th style="padding: 0.75rem;">Amount</th>
+                <th style="padding: 0.75rem;">Period</th>
+                <th style="padding: 0.75rem;">Notes</th>
+                <th style="padding: 0.75rem;">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for allocation in allocations %}
+            <tr style="border-bottom: 1px solid var(--border-color);">
+                <td style="padding: 0.75rem;">
+                    {% if allocation.employee %}
+                        User: {{ allocation.employee.username }}
+                    {% else %}
+                        Dept: {{ allocation.department.name }}
+                    {% endif %}
+                </td>
+                <td style="padding: 0.75rem; font-weight: 600; color: var(--primary-color);">₹{{ allocation.amount }}</td>
+                <td style="padding: 0.75rem;">{{ allocation.start_date }} to {{ allocation.end_date }}</td>
+                <td style="padding: 0.75rem; font-size: 0.9rem; color: var(--text-muted);">{{ allocation.notes|truncatechars:50 }}</td>
+                <td style="padding: 0.75rem;">
+                    {% if user.role == 'ADMIN' %}
+                    <a href="{% url 'budget_edit' allocation.id %}">Edit</a>
+                    <a href="{% url 'budget_delete' allocation.id %}" class="btn-danger">Delete</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" style="padding: 2rem; text-align: center; color: var(--text-muted);">No budget allocations found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

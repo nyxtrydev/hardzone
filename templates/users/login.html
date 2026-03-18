@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Login - Expense Tracker{% endblock %}
+
+{% block content %}
+<div class="login-wrapper">
+    <div class="login-container">
+        <!-- Left Side: Gradient -->
+        <div class="login-visual">
+            <i class="fas fa-asterisk visual-icon"></i>
+            <div class="visual-content">
+                <h3 class="visual-text">Control budgets with clarity</h3>
+                <h2 class="visual-heading">Track allocations, approvals, expenses, and utilization across teams in one
+                    secure workspace.</h2>
+            </div>
+        </div>
+
+        <!-- Right Side: Form -->
+        <div class="login-form-side">
+            <div class="login-content">
+                <i class="fas fa-asterisk login-icon"></i>
+                <h2>Sign in to your account</h2>
+                <p class="login-subtitle">Access your tasks, budgets, and reports anytime, anywhere - and keep
+                    everything flowing in one place.</p>
+
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <button type="submit" class="btn btn-primary"
+                        style="width: 100%; margin-top: 1rem; padding: 0.75rem; border-radius: 0.5rem;">Login</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
