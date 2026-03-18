@@ -23,12 +23,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-8dq=vv$gi9(fh330s&2c+2%)xb3w1&@t+i2gw*&-yg2)$jk=5m'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
     'hardzone.onrender.com',
 ]
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://hardzone.onrender.com'
+]
 
 # Application definition
 
